@@ -4,6 +4,7 @@
 #include <memory.h>
 #include <stdlib.h>
 #include <string>
+#include <iostream>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -39,6 +40,7 @@ bool WriteWaveFile(const char* fileName, float *rawData, int32 numSamples, int16
 	FILE *File = fopen(fileName,"w+b");
 	if(!File)
 	{
+		std::cout << "File failed to open.\n";
 		return false;
 	}
 

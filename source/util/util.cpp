@@ -27,7 +27,7 @@ void ConvertFloatToAudioSample(float value, int32 &clampedValue) {
 }
 
 //calculate the frequency of the specified note.
-float CalculateFrequency(float octave,float note) {
+float CalculateFrequency(float octave, float note) {
 	return (float)(440 * pow(2.0, ((double)((octave-4) * 12 + note)) / 12.0));
 }
 

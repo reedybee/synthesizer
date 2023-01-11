@@ -32,8 +32,7 @@
 	11 = G#
 */
 
-float SineOscillator(float &phase, float frequency, float sampleRate)
-{
+float SineOscillator(float &phase, float frequency, float sampleRate) {
 	phase += 2 * (float)M_PI * frequency / sampleRate;
 
 	while (phase >= 2 * (float)M_PI)
@@ -45,81 +44,74 @@ float SineOscillator(float &phase, float frequency, float sampleRate)
 	return sin(phase);
 }
 
-float SawtoothOscillator(float &fPhase, float fFrequency, float fSampleRate)
-{
-	fPhase += fFrequency/fSampleRate;
+float SawtoothOscillator(float &phase, float frequency, float sampleRate) {
+	phase += frequency/sampleRate;
 
-	while(fPhase > 1.0f)
-		fPhase -= 1.0f;
+	while(phase > 1.0f)
+		phase -= 1.0f;
 
-	while(fPhase < 0.0f)
-		fPhase += 1.0f;
+	while(phase < 0.0f)
+		phase += 1.0f;
 
-	return (fPhase * 2.0f) - 1.0f;
+	return (phase * 2.0f) - 1.0f;
 }
 
-float SquareOscillator(float &fPhase, float fFrequency, float fSampleRate)
-{
-	fPhase += fFrequency/fSampleRate;
+float SquareOscillator(float &phase, float frequency, float sampleRate) {
+	phase += frequency/sampleRate;
 
-	while(fPhase > 1.0f)
-		fPhase -= 1.0f;
+	while(phase > 1.0f)
+		phase -= 1.0f;
 
-	while(fPhase < 0.0f)
-		fPhase += 1.0f;
+	while(phase < 0.0f)
+		phase += 1.0f;
 
-	if(fPhase <= 0.5f)
+	if(phase <= 0.5f)
 		return -1.0f;
 	else
 		return 1.0f;
 }
 
-float TriangleOscillator(float &fPhase, float fFrequency, float fSampleRate)
-{
-	fPhase += fFrequency/fSampleRate;
+float TriangleOscillator(float &phase, float frequency, float sampleRate) {
+	phase += frequency / sampleRate;
 
-	while(fPhase > 1.0f)
-		fPhase -= 1.0f;
+	while(phase > 1.0f)
+		phase -= 1.0f;
 
-	while(fPhase < 0.0f)
-		fPhase += 1.0f;
+	while(phase < 0.0f)
+		phase += 1.0f;
 
-	float fRet;
-	if(fPhase <= 0.5f)
-		fRet=fPhase*2;
+	float ret;
+	if(phase <= 0.5f)
+		ret = phase * 2;
 	else
-		fRet=(1.0f - fPhase)*2;
+		ret=(1.0f - phase) * 2;
 
-	return (fRet * 2.0f) - 1.0f;
+	return (ret * 2.0f) - 1.0f;
 }
 
-float NoiseOscillator(float &fPhase, float fFrequency, float fSampleRate, float fLastValue, bool intense = false)
-{
-	unsigned int nLastSeed = (unsigned int)fPhase;
-	fPhase += fFrequency/fSampleRate;
-	unsigned int nSeed = (unsigned int)fPhase;
+float NoiseOscillator(float &phase, float frequency, float sampleRate, float lastValue, bool intense = false) {
+	unsigned int lastSeed = (unsigned int)phase;
+	phase += frequency / sampleRate;
+	unsigned int seed = (unsigned int)phase;
 
-	while(fPhase > 2.0f)
-		fPhase -= 1.0f;
+	while(phase > 2.0f)
+		phase -= 1.0f;
 
-	if(nSeed != nLastSeed)
-	{
-		float fValue = ((float)rand()) / ((float)RAND_MAX);
-		fValue = (fValue * 2.0f) - 1.0f;
+	if(seed != lastSeed) {
+		float value = ((float)rand()) / ((float)RAND_MAX);
+		value = (value * 2.0f) - 1.0f;
 
 		if (intense) {
 
-		if(fValue < 0)
-			fValue = -1.0f;
+		if(value < 0)
+			value = -1.0f;
 		else
-			fValue = 1.0f;
+			value = 1.0f;
 		}
 
-		return fValue;
-	}
-	else
-	{
-		return fLastValue;
+		return value;
+	} else {
+		return lastValue;
 	}
 }
 
@@ -133,241 +125,257 @@ int main(int argc, char* argv[]) {
 	// end
 
 	// standard waveform params
-	int nSampleRate = 44100;
-	int nNumSeconds = 4;
-	int nNumChannels = 1;
-	float fFrequency = CalculateFrequency(3,3); // middle C
+	int sampleRate = 44100;
+	int numSeconds = 12;
+	int numChannels = 1;
+	float frequency = CalculateFrequency(3,3); // middle C
 
 	//make our buffer to hold the samples
-	int nNumSamples = nSampleRate * nNumChannels * nNumSeconds; // TODO: remember this, later make sound dependant
-	float *pData = new float[nNumSamples];
+	int numSamples = sampleRate * numChannels * numSeconds; // TODO: remember this, later make sound dependant
+	float *data = new float[numSamples];
 
 	//the phase of our oscilator, we don't really need to reset it between wave files
 	//it just needs to stay continuous within a wave file
-	float fPhase = 0;
+	float phase = 0;
 
 	//make a naive sine wave
-	for(int nIndex = 0; nIndex < nNumSamples; ++nIndex)
+	for(int index = 0; index < numSamples; ++index)
 	{
-		pData[nIndex] = sin((float)nIndex * 2 * (float)M_PI * fFrequency / (float)nSampleRate);
+		data[index] = sin((float)index * 2 * (float)M_PI * frequency / (float)sampleRate);
 	}
 
-	WriteWaveFile<int16>("sinenaive.wav",pData,nNumSamples,nNumChannels,nSampleRate);
+	WriteWaveFile<int16>("sinenaive.wav", data, numSamples, numChannels, sampleRate);
 
 	//make a discontinuitous (popping) sine wave
-	for(int nIndex = 0; nIndex < nNumSamples; ++nIndex)
+	for(int index = 0; index < numSamples; ++index)
 	{
-		if(nIndex < nNumSamples / 2)
+		if(index < numSamples / 2)
 		{
 			float fCurrentFrequency = CalculateFrequency(3,3);
-			pData[nIndex] = sin((float)nIndex * 2 * (float)M_PI * fCurrentFrequency / (float)nSampleRate);
+			data[index] = sin((float)index * 2 * (float)M_PI * fCurrentFrequency / (float)sampleRate);
 		}
 		else
 		{
 			float fCurrentFrequency = CalculateFrequency(3,4);
-			pData[nIndex] = sin((float)nIndex * 2 * (float)M_PI * fCurrentFrequency / (float)nSampleRate);
+			data[index] = sin((float)index * 2 * (float)M_PI * fCurrentFrequency / (float)sampleRate);
 		}
 	}
 
-	WriteWaveFile<int16>("sinediscon.wav",pData,nNumSamples,nNumChannels,nSampleRate);
+	WriteWaveFile<int16>("sinediscon.wav", data, numSamples, numChannels, sampleRate);
 
 	//make a continuous sine wave that changes frequencies
-	for(int nIndex = 0; nIndex < nNumSamples; ++nIndex)
+	for(int index = 0; index < numSamples; ++index)
 	{
-		if(nIndex < nNumSamples / 2)
+		if(index < numSamples / 2)
 		{
 			float fCurrentFrequency = CalculateFrequency(3,3);
-			fPhase += 2 * (float)M_PI * fCurrentFrequency/(float)nSampleRate;
+			phase += 2 * (float)M_PI * fCurrentFrequency/(float)sampleRate;
 
-			while(fPhase >= 2 * (float)M_PI)
-				fPhase -= 2 * (float)M_PI;
+			while(phase >= 2 * (float)M_PI)
+				phase -= 2 * (float)M_PI;
 
-			while(fPhase < 0)
-				fPhase += 2 * (float)M_PI;
+			while(phase < 0)
+				phase += 2 * (float)M_PI;
 
-			pData[nIndex] = sin(fPhase);
+			data[index] = sin(phase);
 		}
 		else
 		{
 			float fCurrentFrequency = CalculateFrequency(3,4);
-			fPhase += 2 * (float)M_PI * fCurrentFrequency/(float)nSampleRate;
+			phase += 2 * (float)M_PI * fCurrentFrequency / (float)sampleRate;
 
-			while(fPhase >= 2 * (float)M_PI)
-				fPhase -= 2 * (float)M_PI;
+			while(phase >= 2 * (float)M_PI)
+				phase -= 2 * (float)M_PI;
 
-			while(fPhase < 0)
-				fPhase += 2 * (float)M_PI;
+			while(phase < 0)
+				phase += 2 * (float)M_PI;
 
-			pData[nIndex] = sin(fPhase);
+			data[index] = sin(phase);
 		}
 	}
 
-	WriteWaveFile<int16>("sinecon.wav",pData,nNumSamples,nNumChannels,nSampleRate);
+	WriteWaveFile<int16>("sinecon.wav", data, numSamples, numChannels, sampleRate);
 
 	//make a sine wave
-	for(int nIndex = 0; nIndex < nNumSamples; ++nIndex)
+	for(int index = 0; index < numSamples; ++index)
 	{
-		pData[nIndex] = SquareOscillator(fPhase,fFrequency,(float)nSampleRate);
+		data[index] = SquareOscillator(phase, frequency, (float)sampleRate);
 	}
 
-	WriteWaveFile<int16>("sine.wav",pData,nNumSamples,nNumChannels,nSampleRate);
+	WriteWaveFile<int16>("sine.wav", data, numSamples, numChannels, sampleRate);
 
 	//make a quieter sine wave
-	for(int nIndex = 0; nIndex < nNumSamples; ++nIndex)
+	for(int index = 0; index < numSamples; ++index)
 	{
-		pData[nIndex] = SineOscillator(fPhase,fFrequency,(float)nSampleRate) * 0.4f;
+		data[index] = SineOscillator(phase, frequency, (float)sampleRate) * 0.4f;
 	}
 
-	WriteWaveFile<int16>("sinequiet.wav",pData,nNumSamples,nNumChannels,nSampleRate);
+	WriteWaveFile<int16>("sinequiet.wav", data, numSamples, numChannels, sampleRate);
 
 	//make a clipping sine wave
-	for(int nIndex = 0; nIndex < nNumSamples; ++nIndex)
+	for(int index = 0; index < numSamples; ++index)
 	{
-		pData[nIndex] = SineOscillator(fPhase,fFrequency,(float)nSampleRate) * 1.4f;
+		data[index] = SineOscillator(phase, frequency, (float)sampleRate) * 1.4f;
 	}
 
-	WriteWaveFile<int16>("sineclip.wav",pData,nNumSamples,nNumChannels,nSampleRate);
+	WriteWaveFile<int16>("sineclip.wav", data, numSamples, numChannels, sampleRate);
 
 	//make a saw wave
-	for(int nIndex = 0; nIndex < nNumSamples; ++nIndex)
+	for(int index = 0; index < numSamples; ++index)
 	{
-		pData[nIndex] = SawtoothOscillator(fPhase,fFrequency,(float)nSampleRate);
+		data[index] = SawtoothOscillator(phase, frequency, (float)sampleRate);
 	}
 
-	WriteWaveFile<int16>("saw.wav",pData,nNumSamples,nNumChannels,nSampleRate);
+	WriteWaveFile<int16>("saw.wav", data, numSamples, numChannels, sampleRate);
 
 	//make a square wave
-	for(int nIndex = 0; nIndex < nNumSamples; ++nIndex)
+	for(int index = 0; index < numSamples; ++index)
 	{
-		pData[nIndex] = SquareOscillator(fPhase,fFrequency,(float)nSampleRate);
+		data[index] = SquareOscillator(phase, frequency, (float)sampleRate);
 	}
 
-	WriteWaveFile<int16>("square.wav",pData,nNumSamples,nNumChannels,nSampleRate);
+	WriteWaveFile<int16>("square.wav", data, numSamples, numChannels, sampleRate);
 
 	//make a triangle wave
-	for(int nIndex = 0; nIndex < nNumSamples; ++nIndex)
+	for(int index = 0; index < numSamples; ++index)
 	{
-		pData[nIndex] = TriangleOscillator(fPhase,fFrequency,(float)nSampleRate);
+		data[index] = TriangleOscillator(phase, frequency, (float)sampleRate);
 	}
 
-	WriteWaveFile<int16>("triangle.wav",pData,nNumSamples,nNumChannels,nSampleRate);
+	WriteWaveFile<int16>("triangle.wav", data, numSamples, numChannels, sampleRate);
 
 	//make some noise or... make... some... NOISE!!!
-	for(int nIndex = 0; nIndex < nNumSamples; ++nIndex)
+	for(int index = 0; index < numSamples; ++index)
 	{
-		pData[nIndex] = NoiseOscillator(fPhase,fFrequency,(float)nSampleRate, nIndex > 0 ? pData[nIndex-1] : 0.0f);
+		data[index] = NoiseOscillator(phase, frequency, (float)sampleRate, index > 0 ? data[index-1] : 0.0f);
 	}
 
-	WriteWaveFile<int16>("noise.wav",pData,nNumSamples,nNumChannels,nSampleRate);
+	WriteWaveFile<int16>("noise.wav", data, numSamples, numChannels, sampleRate);
+
+	float octaves[] = {
+		3, 3, 3, 3, 3, 3, 3, 3,3, 3, 3, 3, 3, 3, 3, 3,3, 3, 3, 3, 3, 3, 3, 3,3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3,3, 3, 3, 3, 3, 3, 3, 3,3, 3, 3, 3, 3, 3, 3, 3,3, 3, 3, 3, 3, 3, 3, 3,
+	};
+	
+	float notes[] = {
+		3, 10, 2, 10, 
+		3, 2, 0, 10, 0, 2, 10,
+		5, 10, 2, 10,
+		3, 2, 0, 10, 0, 2, 5, 2, 
+		7, 10, 2, 10, 
+		3, 2, 0, 10, 0, 2, 10 
+	};
+
+	for (int index = 0; index < numSamples; index++) {
+		int quarterNote = index * 4 / sampleRate;
+		data[index] = SineOscillator(phase,CalculateFrequency(2,notes[quarterNote]),(float)sampleRate);
+	}
+
+	WriteWaveFile<int16>("songtest.wav", data, numSamples, numChannels, sampleRate);
 
 	//make a dumb little song
-	for(int nIndex = 0; nIndex < nNumSamples; ++nIndex)
+	for(int index = 0; index < numSamples; index++)
 	{
 		//calculate which quarter note we are on
-		int nQuarterNote = nIndex * 4 / nSampleRate;
-		float fQuarterNotePercent = (float)((nIndex * 4) % nSampleRate) / (float)nSampleRate;
-
-		//intentionally add a "pop" noise mid way through the 3rd quarter note
-		// if(nIndex == nSampleRate * 3 / 4 + nSampleRate / 8)
-		// {
-		// 	pData[nIndex] = -1.0f;
-		// 	continue;
-		// }
+		int nQuarterNote = index * 4 / sampleRate;
+		float fQuarterNotePercent = (float)((index * 4) % sampleRate) / (float)sampleRate;
 
 		//do different logic based on which quarter note we are on
 		switch(nQuarterNote)
 		{
 			case 0:
 			{
-				pData[nIndex] = SineOscillator(fPhase,CalculateFrequency(1,3),(float)nSampleRate);
+				data[index] = SineOscillator(phase,CalculateFrequency(1,3),(float)sampleRate);
 				break;
 			}
 			case 1:
 			{
-				pData[nIndex] = SineOscillator(fPhase,CalculateFrequency(1,10),(float)nSampleRate);
+				data[index] = SineOscillator(phase,CalculateFrequency(1,10),(float)sampleRate);
 				break;
 			}
 			case 2:
 			{
-				pData[nIndex] = SineOscillator(fPhase,CalculateFrequency(1,2),(float)nSampleRate);
+				data[index] = SineOscillator(phase,CalculateFrequency(1,2),(float)sampleRate);
 				break;
 			}
 			case 3:
 			{
-				pData[nIndex] = SineOscillator(fPhase,CalculateFrequency(1,10),(float)nSampleRate);
+				data[index] = SineOscillator(phase,CalculateFrequency(1,10),(float)sampleRate);
 				break;
 			}
 			case 4:
 			{
-				pData[nIndex] = SineOscillator(fPhase,CalculateFrequency(1,3),(float)nSampleRate);
+				data[index] = SineOscillator(phase,CalculateFrequency(1,3),(float)sampleRate);
 				break;
 			}
 			case 5:
 			{
-				pData[nIndex] = SineOscillator(fPhase,CalculateFrequency(1,2),(float)nSampleRate);
+				data[index] = SineOscillator(phase,CalculateFrequency(1,2),(float)sampleRate);
 				break;
 			}
 			case 6:
 			{
-				pData[nIndex] = SineOscillator(fPhase,CalculateFrequency(1,0),(float)nSampleRate) * (1.0f - fQuarterNotePercent);
+				data[index] = SineOscillator(phase,CalculateFrequency(1,0),(float)sampleRate) * (1.0f - fQuarterNotePercent);
 				break;
 			}
 			case 7: {
-				pData[nIndex] = SawtoothOscillator(fPhase,CalculateFrequency(1,10),(float)nSampleRate);
+				data[index] = SawtoothOscillator(phase,CalculateFrequency(1,10),(float)sampleRate);
 				break;
 			}
 			case 8:
 			{
-				pData[nIndex] = SawtoothOscillator(fPhase,CalculateFrequency(3,0),(float)nSampleRate);
+				data[index] = SawtoothOscillator(phase,CalculateFrequency(3,0),(float)sampleRate);
 				break;
 			}
 			case 9:
 			{
-				pData[nIndex] = SawtoothOscillator(fPhase,CalculateFrequency(3,2),(float)nSampleRate);
+				data[index] = SawtoothOscillator(phase,CalculateFrequency(3,2),(float)sampleRate);
 				break;
 			}
 			case 10:
 			{
-				pData[nIndex] = SawtoothOscillator(fPhase,CalculateFrequency(3,10),(float)nSampleRate);
+				data[index] = SawtoothOscillator(phase,CalculateFrequency(3,10),(float)sampleRate);
 				break;
 			}
 			case 11:
 			{
-				pData[nIndex] = SawtoothOscillator(fPhase,CalculateFrequency(3,5),(float)nSampleRate);
+				data[index] = SawtoothOscillator(phase,CalculateFrequency(3,5),(float)sampleRate);
 				break;
 			}
 			case 12:
 			{
-				pData[nIndex] = SawtoothOscillator(fPhase,CalculateFrequency(3,5),(float)nSampleRate);
+				data[index] = SawtoothOscillator(phase,CalculateFrequency(3,5),(float)sampleRate);
 				break;
 			}
 			case 13:
 			{
-				pData[nIndex] = SawtoothOscillator(fPhase,CalculateFrequency(3,3 + fQuarterNotePercent * 2.0f),(float)nSampleRate);
+				data[index] = SawtoothOscillator(phase,CalculateFrequency(3,3 + fQuarterNotePercent * 2.0f),(float)sampleRate);
 				break;
 			}
 			case 14:
 			{
-				pData[nIndex] = SawtoothOscillator(fPhase,CalculateFrequency(3,5),(float)nSampleRate) * (1.0f - fQuarterNotePercent);
+				data[index] = SawtoothOscillator(phase,CalculateFrequency(3,5),(float)sampleRate) * (1.0f - fQuarterNotePercent);
 				break;
 			}
 			case 15:
 			case 16: {
-				pData[nIndex] = SawtoothOscillator(fPhase,CalculateFrequency(3,5),(float)nSampleRate) * (1.0f - fQuarterNotePercent);
+				data[index] = SawtoothOscillator(phase,CalculateFrequency(3,5),(float)sampleRate) * (1.0f - fQuarterNotePercent);
 				break;
 			}
 			default:
 			{
-				pData[nIndex] = 0;
+				data[index] = 0;
 				break;
 			}
 		}
 	}
 
-	WriteWaveFile<int16>("song.wav",pData,nNumSamples,nNumChannels,nSampleRate);
+	WriteWaveFile<int16>("song.wav",data,numSamples,numChannels,sampleRate);
+
+
 
 	//free our data buffer
-	delete[] pData;
+	delete[] data;
 
 	return 0;
 }
