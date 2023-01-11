@@ -10,6 +10,7 @@
                 "-I${workspaceFolder}\\source",
                 "-I${workspaceFolder}",
                 "${workspaceFolder}\\source\\util\\util.cpp",
+                "${workspaceFolder}\\source\\util\\song.cpp",
                 "${workspaceFolder}\\source\\wave\\wave.cpp",
                 "${file}",
                 "-o",
