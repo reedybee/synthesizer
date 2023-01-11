@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <memory.h>
+#include <stdlib.h>
+
+#define _USE_MATH_DEFINES
+#include <math.h>
+
+#include <util/util.h>
+
+void ConvertFloatToAudioSample(float value, uint8 &clampedValue) {
+	value = (value + 1.0f) * 127.5f;
+	CLAMP(value,0.0f,255.0f);
+	clampedValue = (uint8)value;
+}
+
+void ConvertFloatToAudioSample(float value, int16 &clampedValue) {
+	value *= 32767.0f;
+	CLAMP(value, -32768.0f, 32767.0f);
+	clampedValue = (int16)value;
+}
+
+void ConvertFloatToAudioSample(float value, int32 &clampedValue) {
+    double workingValue = (double)value;
+	workingValue *= 2147483647.0;
+	CLAMP(workingValue, -2147483648.0, 2147483647.0);
+	clampedValue = (int32)workingValue;
+}
+
+//calculate the frequency of the specified note.
+float CalculateFrequency(float octave,float note) {
+	return (float)(440 * pow(2.0, ((double)((octave-4) * 12 + note)) / 12.0));
+}
