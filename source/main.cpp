@@ -267,7 +267,7 @@ int main(int argc, char* argv[]) {
 	};
 
 	for (int index = 0; index < numSamples; index++) {
-		int quarterNote = index * 4 / sampleRate;
+		int quarterNote = index * 3 / sampleRate;
 		data[index] = SineOscillator(phase,CalculateFrequency(2,notes[quarterNote]),(float)sampleRate);
 	}
 
