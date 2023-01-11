@@ -261,11 +261,11 @@ int main(int argc, char* argv[])
 		float fQuarterNotePercent = (float)((nIndex * 4) % nSampleRate) / (float)nSampleRate;
 
 		//intentionally add a "pop" noise mid way through the 3rd quarter note
-		if(nIndex == nSampleRate * 3 / 4 + nSampleRate / 8)
-		{
-			pData[nIndex] = -1.0f;
-			continue;
-		}
+		// if(nIndex == nSampleRate * 3 / 4 + nSampleRate / 8)
+		// {
+		// 	pData[nIndex] = -1.0f;
+		// 	continue;
+		// }
 
 		//do different logic based on which quarter note we are on
 		switch(nQuarterNote)
