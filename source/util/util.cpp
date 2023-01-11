@@ -30,3 +30,25 @@ void ConvertFloatToAudioSample(float value, int32 &clampedValue) {
 float CalculateFrequency(float octave,float note) {
 	return (float)(440 * pow(2.0, ((double)((octave-4) * 12 + note)) / 12.0));
 }
+
+/*
+	frequency equation
+	frequency = 440(2^(n/12))
+
+	N=0 is A4
+	N=1 is A#4
+
+	notes:
+	0  = A
+	1  = A#
+	2  = B
+	3  = C
+	4  = C#
+	5  = D
+	6  = D#
+	7  = E
+	8  = F
+	9  = F#
+	10 = G
+	11 = G#
+*/

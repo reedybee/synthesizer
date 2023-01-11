@@ -11,7 +11,7 @@
             "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "request": "launch",
             "console": "externalTerminal",
-            "cwd": "${workspaceFolder}\\sounds"
+            "cwd": "${workspaceFolder}"
         }
     ],
 }

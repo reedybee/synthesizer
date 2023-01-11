@@ -7,10 +7,11 @@
 #include <math.h>
 
 #include <util/util.h>
+#include <util/song.h>
 #include <wave/wave.h>
 
 /*
-	frequency equation
+	frequency equatione
 	frequency = 440(2^(n/12))
 
 	N=0 is A4
@@ -123,8 +124,16 @@ float NoiseOscillator(float &fPhase, float fFrequency, float fSampleRate, float 
 }
 
 //the entry point of our application
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
+
+	// song input testing
+
+	Song song = Song("res/song.txt");
+
+
+
+	// end
+
 	// standard waveform params
 	int nSampleRate = 44100;
 	int nNumSeconds = 4;
