@@ -2,4 +2,4 @@
 
 A basic sound synthesizer.
 
-Writes .wav files.
+Generates a wave and writes to a .wav file.
