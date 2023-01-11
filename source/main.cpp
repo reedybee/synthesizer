@@ -130,8 +130,6 @@ int main(int argc, char* argv[]) {
 
 	Song song = Song("res/song.txt");
 
-
-
 	// end
 
 	// standard waveform params
