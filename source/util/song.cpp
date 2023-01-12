@@ -17,10 +17,10 @@ Song::Song(const char* songFilePath) {
     std::fstream file = std::fstream(songFilePath);
 
     if (!file.is_open()) {
-        std::cout << "Song file at " << songFilePath << " failed to load.\n";
+        //std::cout << "Song file at " << songFilePath << " failed to load.\n";
         return;
     } else {
-        std::cout << "Song file at " << songFilePath << " has been loaded.\n";
+        //std::cout << "Song file at " << songFilePath << " has been loaded.\n";
     }
 
     std::string line;
@@ -32,7 +32,7 @@ Song::Song(const char* songFilePath) {
     std::vector<char> fileChar(s.begin(), s.end());
 
     for (int i = 0; i < fileChar.size(); i++) {
-        std::cout << fileChar[i];
+        //std::cout << fileChar[i];
     }
     
     

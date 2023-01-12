@@ -37,11 +37,13 @@ template <typename T>
 bool WriteWaveFile(const char* fileName, float *rawData, int32 numSamples, int16 numChannels, int32 sampleRate) {
 	//open the file if we can
 
-	FILE *File = fopen(fileName,"w+b");
-	if(!File)
-	{
+	FILE *File = fopen(fileName, "w+b");
+	if(!File) {
 		std::cout << "File failed to open.\n";
 		return false;
+	}
+	else {
+		std::cout << "File has been created of name " << fileName << "\n";
 	}
 
 	//calculate bits per sample and the data size
@@ -70,7 +72,7 @@ bool WriteWaveFile(const char* fileName, float *rawData, int32 numSamples, int16
 	wave.subChunk2Size = dataSize;
 
 	//write the header
-	fwrite(&wave,sizeof(WaveAudioFile),1,File);
+	fwrite(&wave, sizeof(WaveAudioFile), 1, File);
 
 	//write the wave data itself, converting it from float to the type specified
 	T *pData = new T[numSamples];
