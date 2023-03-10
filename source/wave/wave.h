@@ -85,3 +85,4 @@ bool WriteWaveFile(const char* fileName, float *rawData, int32 numSamples, int16
 	fclose(File);
 	return true;
 }
+
