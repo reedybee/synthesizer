@@ -8,13 +8,18 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "-I${workspaceFolder}\\source",
+                "-I${workspaceFolder}\\dependencies\\glad\\include",
+                "-I${workspaceFolder}\\dependencies\\glfw\\include",
+                "-L${workspaceFolder}\\dependencies\\glfw\\lib-static-ucrt",
                 "-I${workspaceFolder}",
                 "${workspaceFolder}\\source\\util\\util.cpp",
                 "${workspaceFolder}\\source\\util\\song.cpp",
                 "${workspaceFolder}\\source\\wave\\wave.cpp",
+                "${workspaceFolder}\\dependencies\\glad\\src\\glad.c",
                 "${file}",
                 "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+                "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "-lglfw3", "-lopengl32", "-lgdi32", 
             ],
             "options": {
                 "cwd": "${fileDirname}"

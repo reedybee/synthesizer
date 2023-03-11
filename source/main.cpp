@@ -1,3 +1,6 @@
+#include <glad/glad.h>
+#include <glfw/glfw3.h>
+
 #include <stdio.h>
 #include <memory.h>
 #include <stdlib.h>
