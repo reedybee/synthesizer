@@ -1,0 +1,29 @@
+float octaves[] = {
+		4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+		4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+	};
+	
+	float notes[] = {
+		3, 10, 2, 10, 
+		3, 2, 0, 10, 0, 2, 10,
+		5, 10, 2, 10,
+		3, 2, 0, 10, 0, 2, 5, 2, 
+		7, 10, 2, 10, 
+		3, 2, 0, 10, 0, 2, 10 
+	};
+
+	for (int index = 0; index < numSamples; index++) {
+		int quarterNote = index * 4 / sampleRate;
+		data[index] = SineOscillator(phase,CalculateFrequency(5,notes[quarterNote]),(float)sampleRate) * 1.0;
+		//std::cout << data[index] << "\n";
+	}
+
+	WriteWaveFile("songtest.wav", data, numSamples, numChannels, sampleRate);
+
+	// TODO: fix this you  dummy
+	// for (int index = 0; index < numSamples; index++) {
+	// 	int quarterNote = index * 4 / sampleRate;
+	// 	data[index] = SineOscillator(phase, CalculateFrequency(2, quarterNote), (float)sampleRate);
+	// }
+
+	// WriteWaveFile<int16>("scale.wav", data, numSamples, numChannels, sampleRate);
