@@ -1,6 +1,3 @@
-#include <glad/glad.h>
-#include <glfw/glfw3.h>
-
 #include <stdio.h>
 #include <memory.h>
 #include <stdlib.h>
@@ -10,31 +7,8 @@
 #include <math.h>
 
 #include <util/util.h>
-#include <util/song.h>
 #include <wave/wave.h>
 #include <gen/oscillator.h>
-
-/*
-	frequency equation
-	frequency = 440(2^(n/12))
-
-	N=0 is A4
-	N=1 is A#4
-
-	notes:
-	0  = A
-	1  = A#
-	2  = B
-	3  = C
-	4  = C#
-	5  = D
-	6  = D#
-	7  = E
-	8  = F
-	9  = F#
-	10 = G
-	11 = G#
-*/
 
 //the entry point of our application
 int main(int argc, char* argv[]) {
@@ -46,12 +20,6 @@ int main(int argc, char* argv[]) {
 	std::cout << "E4 " << CalculateFrequency(4, E) << "\n";
 	std::cout << "F4 " << CalculateFrequency(4, F) << "\n";
 	std::cout << "G4 " << CalculateFrequency(4, G) << "\n\n";
-
-	// song input testing
-
-	Song song = Song("res/song.txt");
-
-	// end
 
 	// standard waveform params
 	int sampleRate = 44100;
