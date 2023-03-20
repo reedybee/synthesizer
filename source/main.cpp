@@ -57,6 +57,9 @@ int main(int argc, char* argv[]) {
 
 	char name[256];
 
+	const char* waveforms[] = {"Sine", "Sawtooth", "Square", "Triangle", "Noise"};
+	static const char* selectedWaveform = waveforms[0];
+
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 
@@ -68,12 +71,34 @@ int main(int argc, char* argv[]) {
 		ImGui::NewFrame();
 
 		ImGui::Begin("synth window");
-		ImGui::InputText("Name", name, sizeof(name));
+		ImGui::InputText("File Name", name, sizeof(name));
+
+		if (ImGui::BeginCombo("Default Waveform", selectedWaveform)) {
+			for (int i = 0; i < IM_ARRAYSIZE(waveforms); i++) {
+				bool selected = (selectedWaveform == waveforms[i]);
+				if (ImGui::Selectable(waveforms[i], selected))
+					selectedWaveform = waveforms[i];
+				if (selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+		std::string generate = "Generate ";
+		generate.append(selectedWaveform);
+		if (ImGui::Button(generate.c_str())) {
+			if (selectedWaveform == "Sine")
+				defaultGenerator.sine(name, 5, frequency);
+			if (selectedWaveform == "Sawtooth")
+				defaultGenerator.saw(name, 5, frequency);
+			if (selectedWaveform == "Square")
+				defaultGenerator.square(name, 5, frequency);
+			if (selectedWaveform == "Triangle")
+				defaultGenerator.triangle(name, 5, frequency);
+			if (selectedWaveform == "Noise")
+				defaultGenerator.noise(name, 5, frequency);
+		}
 		if (ImGui::Button("Generate All Default Wave Files")) {
 			defaultGenerator.all(frequency);
-		}
-		if (ImGui::Button("Generate Sine")) {
-			defaultGenerator.sine("sine", 5, frequency);
 		}
 		
 		ImGui::End();
