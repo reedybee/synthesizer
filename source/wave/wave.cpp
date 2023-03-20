@@ -13,7 +13,10 @@
 bool WriteWaveFile(const char* fileName, float *rawData, int32 numSamples, int16 numChannels, int32 sampleRate) {
 	//open the file if we can
 
-	FILE *File = fopen(fileName, "w+b");
+	std::string name = fileName;
+	name.append(".wav");
+
+	FILE *File = fopen(name.c_str(), "w+b");
 	if(!File) {
 		std::cout << "File failed to open.\n";
 		return false;

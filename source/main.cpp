@@ -15,32 +15,22 @@
 #include <util/util.h>
 #include <wave/wave.h>
 #include <gen/oscillator.h>
+#include <gen/generator.h>
 
-// standard waveform params
-int sampleRate = 44100;
-int numSeconds = 5;
-int numChannels = 1;
+// TODO: talk to mr stone about finding a better name for this "synth"
+
 float frequency = CalculateFrequency(3,3);
-
-//make our buffer to hold the samples
-int numSamples = sampleRate * numChannels * numSeconds; // TODO: remember this, later make sound dependant
-float *data = new float[numSamples];
-
-//the phase of our oscilator
-float phase = 0;
-
-void sine(const char* name) {
-	//make a sine wave
-	for(int index = 0; index < numSamples; ++index)
-	{
-		data[index] = SineOscillator(phase, frequency, (float)sampleRate);
-	}
-
-	WriteWaveFile(name, data, numSamples, numChannels, sampleRate);
-}
 
 //the entry point of our application
 int main(int argc, char* argv[]) {
+	std::cout << "A4 " << CalculateFrequency(4, A) << "\n";
+	std::cout << "B4 " << CalculateFrequency(4, B) << "\n";
+	std::cout << "C4 " << CalculateFrequency(4, C) << "\n";
+	std::cout << "D4 " << CalculateFrequency(4, D) << "\n";
+	std::cout << "E4 " << CalculateFrequency(4, E) << "\n";
+	std::cout << "F4 " << CalculateFrequency(4, F) << "\n";
+	std::cout << "G4 " << CalculateFrequency(4, G) << "\n\n";
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -65,7 +55,7 @@ int main(int argc, char* argv[]) {
 
 	ImGui::StyleColorsDark();
 
-	char* name;
+	char name[256];
 
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -78,11 +68,14 @@ int main(int argc, char* argv[]) {
 		ImGui::NewFrame();
 
 		ImGui::Begin("synth window");
-		ImGui::InputFloat("Phase", &phase);
-		ImGui::InputText("Name", name, 256);
-		if (ImGui::Button("Generate Sine Wave")) {
-			sine(name);
+		ImGui::InputText("Name", name, sizeof(name));
+		if (ImGui::Button("Generate All Default Wave Files")) {
+			defaultGenerator.all(frequency);
 		}
+		if (ImGui::Button("Generate Sine")) {
+			defaultGenerator.sine("sine", 5, frequency);
+		}
+		
 		ImGui::End();
 
 		ImGui::Render();
@@ -90,66 +83,6 @@ int main(int argc, char* argv[]) {
 
 		glfwSwapBuffers(window);
 	}
-
-	// TODO: talk to mr stone about finding a better name for this 
-
-	std::cout << "A4 " << CalculateFrequency(4, A) << "\n";
-	std::cout << "B4 " << CalculateFrequency(4, B) << "\n";
-	std::cout << "C4 " << CalculateFrequency(4, C) << "\n";
-	std::cout << "D4 " << CalculateFrequency(4, D) << "\n";
-	std::cout << "E4 " << CalculateFrequency(4, E) << "\n";
-	std::cout << "F4 " << CalculateFrequency(4, F) << "\n";
-	std::cout << "G4 " << CalculateFrequency(4, G) << "\n\n";
- 
-	//make a sine wave
-	for(int index = 0; index < numSamples; ++index)
-	{
-		data[index] = SineOscillator(phase, frequency, (float)sampleRate);
-	}
-
-	WriteWaveFile("sine.wav", data, numSamples, numChannels, sampleRate);
-	
-	for(int index = 0; index < numSamples; ++index)
-	{
-		data[index] = SineOscillator(phase, frequency, (float)sampleRate);
-	}
-
-	WriteWaveFile("sineclip.wav", data, numSamples, numChannels, sampleRate);
-
-	//make a saw wave
-	for(int index = 0; index < numSamples; ++index)
-	{
-		data[index] = SawtoothOscillator(phase, frequency, (float)sampleRate);
-	}
-
-	WriteWaveFile("saw.wav", data, numSamples, numChannels, sampleRate);
-
-	//make a square wave
-	for(int index = 0; index < numSamples; ++index)
-	{
-		data[index] = SquareOscillator(phase, frequency, (float)sampleRate);
-	}
-
-	WriteWaveFile("square.wav", data, numSamples, numChannels, sampleRate);
-
-	//make a triangle wave
-	for(int index = 0; index < numSamples; ++index)
-	{
-		data[index] = TriangleOscillator(phase, frequency, (float)sampleRate);
-	}
-
-	WriteWaveFile("triangle.wav", data, numSamples, numChannels, sampleRate);
-
-	//make some noise
-	for(int index = 0; index < numSamples; ++index)
-	{
-		data[index] = NoiseOscillator(phase, frequency, (float)sampleRate, index > 0 ? data[index - 1] : 0.0f);
-	}
-
-	WriteWaveFile("noise.wav", data, numSamples, numChannels, sampleRate);
-
-	//free our data buffer
-	delete[] data;
-
+	glfwTerminate();
 	return 0;
 }

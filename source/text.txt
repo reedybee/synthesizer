@@ -27,3 +27,17 @@ float octaves[] = {
 	// }
 
 	// WriteWaveFile<int16>("scale.wav", data, numSamples, numChannels, sampleRate);
+
+	
+// standard waveform params
+int sampleRate = 44100;
+int numSeconds = 5;
+int numChannels = 1;
+float frequency = CalculateFrequency(3,3);
+
+//make our buffer to hold the samples
+int numSamples = sampleRate * numChannels * numSeconds;
+float *data = new float[numSamples];
+
+//the phase of our oscilator
+float phase = 0;
