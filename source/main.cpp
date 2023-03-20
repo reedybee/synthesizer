@@ -13,6 +13,8 @@
 //the entry point of our application
 int main(int argc, char* argv[]) {
 
+	// TODO: talk to mr stone about finding a better name for this 
+
 	std::cout << "A4 " << CalculateFrequency(4, A) << "\n";
 	std::cout << "B4 " << CalculateFrequency(4, B) << "\n";
 	std::cout << "C4 " << CalculateFrequency(4, C) << "\n";
