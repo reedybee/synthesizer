@@ -91,6 +91,8 @@ int main(int argc, char* argv[]) {
 		glfwSwapBuffers(window);
 	}
 
+	// TODO: talk to mr stone about finding a better name for this 
+
 	std::cout << "A4 " << CalculateFrequency(4, A) << "\n";
 	std::cout << "B4 " << CalculateFrequency(4, B) << "\n";
 	std::cout << "C4 " << CalculateFrequency(4, C) << "\n";
