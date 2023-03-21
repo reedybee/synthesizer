@@ -16,6 +16,9 @@
 #include <wave/wave.h>
 #include <gen/oscillator.h>
 #include <gen/generator.h>
+#include <ren/renderer.h>
+
+#include <serial/serial.h>
 
 // TODO: talk to mr stone about finding a better name for this "synth"
 
@@ -39,39 +42,22 @@ int main(int argc, char* argv[]) {
 	glfwWindowHint(GLFW_DECORATED, true);
 	glfwWindowHint(GLFW_MAXIMIZED, false);
 	
-	GLFWwindow* window = glfwCreateWindow(500, 500, "synthesizer", NULL, NULL);
-	glfwMakeContextCurrent(window);
+	Renderer renderer = Renderer(500, 500, "synthesizer");
 
 	if (!gladLoadGLLoader((GLADloadproc(glfwGetProcAddress)))) {
 		return 0;
 	}
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO & io = ImGui::GetIO();
-
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init();
-
-	ImGui::StyleColorsDark();
-
-	char name[256];
+	renderer.ImGuiInit();
 
 	const char* waveforms[] = {"Sine", "Sawtooth", "Square", "Triangle", "Noise"};
 	static const char* selectedWaveform = waveforms[0];
-
-	while (!glfwWindowShouldClose(window)) {
-		glfwPollEvents();
-
+	while (!renderer.ShouldClose()) {
 		glClearColor(0.0f,0.0f,0.0f,0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
+		renderer.ImGuiNewFrame();
 		ImGui::Begin("synth window");
-		ImGui::InputText("File Name", name, sizeof(name));
 
 		if (ImGui::BeginCombo("Default Waveform", selectedWaveform)) {
 			for (int i = 0; i < IM_ARRAYSIZE(waveforms); i++) {
@@ -87,15 +73,15 @@ int main(int argc, char* argv[]) {
 		generate.append(selectedWaveform);
 		if (ImGui::Button(generate.c_str())) {
 			if (selectedWaveform == "Sine")
-				defaultGenerator.sine(name, 5, frequency);
+				defaultGenerator.sine("sine", 5, frequency);
 			if (selectedWaveform == "Sawtooth")
-				defaultGenerator.saw(name, 5, frequency);
+				defaultGenerator.saw("sawtooth", 5, frequency);
 			if (selectedWaveform == "Square")
-				defaultGenerator.square(name, 5, frequency);
+				defaultGenerator.square("square", 5, frequency);
 			if (selectedWaveform == "Triangle")
-				defaultGenerator.triangle(name, 5, frequency);
+				defaultGenerator.triangle("triangle", 5, frequency);
 			if (selectedWaveform == "Noise")
-				defaultGenerator.noise(name, 5, frequency);
+				defaultGenerator.noise("noise", 5, frequency);
 		}
 		if (ImGui::Button("Generate All Default Wave Files")) {
 			defaultGenerator.all(frequency);
@@ -103,10 +89,9 @@ int main(int argc, char* argv[]) {
 		
 		ImGui::End();
 
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		renderer.ImGuiRender();
 
-		glfwSwapBuffers(window);
+		renderer.Render();
 	}
 	glfwTerminate();
 	return 0;
