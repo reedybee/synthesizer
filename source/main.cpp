@@ -59,6 +59,13 @@ int main(int argc, char* argv[]) {
 		renderer.ImGuiNewFrame();
 		ImGui::Begin("synth window");
 
+		Serial serial = Serial("\\\\.\\COM3", CBR_9600);
+
+		if (!serial.WriteSerialPort("255")) {
+
+			printf("meow\n");
+		}
+
 		if (ImGui::BeginCombo("Default Waveform", selectedWaveform)) {
 			for (int i = 0; i < IM_ARRAYSIZE(waveforms); i++) {
 				bool selected = (selectedWaveform == waveforms[i]);
