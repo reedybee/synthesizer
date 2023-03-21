@@ -18,22 +18,3 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-
-struct Serial {
-public:
-    Serial(char* comport, DWORD baudRate);
-
-    std::string ReadSerialPort(int replyWaitTime);
-    bool WriteSerialPort(char* data);
-    bool CloseSerial();
-    bool connected;
-
-    ~Serial();
-private:
-    HANDLE ioHandler;
-    COMSTAT status;
-    DWORD errors;
-
-    char frontDelimiter;
-	char endDelimiter;
-};

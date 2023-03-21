@@ -19,6 +19,7 @@
                 "${workspaceFolder}\\source\\gen\\generator.cpp",
                 "${workspaceFolder}\\source\\gen\\oscillator.cpp",
                 "${workspaceFolder}\\source\\ren\\renderer.cpp",
+                "${workspaceFolder}\\source\\serial\\serial.cpp",
                 "${workspaceFolder}\\dependencies\\glad\\src\\glad.c",
                 "${workspaceFolder}\\dependencies\\imgui\\*.cpp",
                 "${workspaceFolder}\\dependencies\\imgui\\backends\\*.cpp",
