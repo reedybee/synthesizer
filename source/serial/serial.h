@@ -42,19 +42,7 @@
 
 struct Serial {
 public:
-    Serial(const char* comport, DWORD baudRate);
-
-    std::string ReadSerialPort(int replyWaitTime);
-    bool WriteSerialPort(const char* data);
-    bool CloseSerial();
-    bool connected;
-
-    ~Serial();
+    
 private:
-    HANDLE ioHandler;
-    COMSTAT status;
-    DWORD errors;
-
-    char frontDelimiter;
-	char endDelimiter;
+    
 };
