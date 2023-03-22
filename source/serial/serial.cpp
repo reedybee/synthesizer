@@ -13,6 +13,7 @@
 #include <thread>
 #include <time.h>
 #include <fstream>
+#include <cstdlib>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -20,48 +21,6 @@
 #include <serial/serial.h>
 
 // https://stackoverflow.com/questions/15794422/serial-port-rs-232-connection-in-c
-
-#include <glad/glad.h>
-#include <glfw/glfw3.h>
-#include <imgui/imgui.h>
-#include <imgui/backends/imgui_impl_glfw.h>
-#include <imgui/backends/imgui_impl_opengl3.h>
-
-#include <Windows.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <string>
-#include <chrono>
-#include <thread>
-#include <time.h>
-#include <fstream>
-
-#define _USE_MATH_DEFINES
-#include <math.h>
-
-#include <serial/serial.h>
-
-#include <glad/glad.h>
-#include <glfw/glfw3.h>
-#include <imgui/imgui.h>
-#include <imgui/backends/imgui_impl_glfw.h>
-#include <imgui/backends/imgui_impl_opengl3.h>
-
-#include <Windows.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <string>
-#include <chrono>
-#include <thread>
-#include <time.h>
-#include <fstream>
-
-#define _USE_MATH_DEFINES
-#include <math.h>
-
-#include <serial/serial.h>
 
 Serial::Serial(const char* comport, unsigned int baudRate) {
     handler = CreateFileA(comport, GENERIC_READ | GENERIC_WRITE,  0, NULL, OPEN_EXISTING, 0, NULL);
@@ -98,6 +57,26 @@ Serial::Serial(const char* comport, unsigned int baudRate) {
                 PurgeComm(handler, PURGE_RXCLEAR | PURGE_TXCLEAR);
             }
         }
+
+        COMMTIMEOUTS timeouts = { 0 };
+
+        if (!GetCommTimeouts(handler, &timeouts)) {
+            std::cout << "Failed to get serial timouts.\n";
+        } else {
+            // TODO: find defaults
+            timeouts.ReadIntervalTimeout = 50;
+            timeouts.ReadTotalTimeoutConstant = 50;
+            timeouts.ReadTotalTimeoutMultiplier = 50;
+            timeouts.WriteTotalTimeoutConstant = 50;
+            timeouts.WriteTotalTimeoutMultiplier = 10;
+
+            if (!SetCommTimeouts(handler, &timeouts)) {
+                std::cout << "Could not set serial timeouts.\n";
+            } else {
+                connected = true;
+                PurgeComm(handler, PURGE_RXCLEAR | PURGE_TXCLEAR);
+            }
+        }
     }
 }
 
@@ -108,7 +87,6 @@ bool Serial::Write(const char* data) {
         ClearCommError(handler, &errors, &status);
         return false;
     } else {
-        std::cout << "";
         return true;
     }
 }

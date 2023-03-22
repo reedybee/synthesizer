@@ -105,6 +105,7 @@ int main(int argc, char* argv[]) {
 		if (ImGui::Button("Set Value")) {
 			serial.Write(value);
 		}
+		serial.Write(128);
 
 		renderer.ImGuiRender();
 		renderer.Render();
