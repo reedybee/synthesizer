@@ -16,8 +16,12 @@
 
 #include <gen/oscillator.h>
 
+// Standard waveforms
+const static char* defaultWaveforms[] = {"None", "Sine", "Sawtooth", "Square", "Triangle", "Noise"};
+
 // A bunch of different default waveforms, exports as a .wav file
 struct DefaultGenerator {
+    // Generates all default waveforms and exports as .wav files
     void all(float frequency);
 
     void sine(const char* name, int seconds, float frequency, float amplitudeScale = 1.0f ,int sampleRate = 44100, int numChannels = 1);

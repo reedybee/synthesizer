@@ -16,19 +16,26 @@
 
 struct Renderer {
 public:
+    // Default Constructor
     Renderer(int width, int height, const char* title);
-
+    // Clears the framebuffers specified and clears the color buffer bit to the color specified
+    void ClearFramebuffer(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 0.0f, int flags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // Returns the close flag, if true, the window has been told to close
     bool ShouldClose();
-
+    // Returns the GLFW window
     GLFWwindow* GetWindow();
+    // Swaps the buffers and polls any events
+    void Render();
 
+    // how to interface with imgui from within the renderer
+    
+    // Initializes ImGui
     void ImGuiInit();
-
+    // Creates a new frame for ImGui
     void ImGuiNewFrame();
-
+    // Renders the ImGui context
     void ImGuiRender();
 
-    void Render();
 private:
     GLFWwindow* window;
 };

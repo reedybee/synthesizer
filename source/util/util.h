@@ -37,8 +37,8 @@ enum notes {
 // void ConvertFloatToAudioSample(float fFloat, int16 &nOut);
 //convert 32 bit float to audio sample; -2,147,483,648 to 2,147,483,647.
 void ConvertFloatToAudioSample(float fFloat, int32 &nOut);
-//calculate the frequency of the specified note.
-float CalculateFrequency(float octave,float note);
+// Calculate the frequency of the specified note.
+float CalculateFrequency(float octave, float note);
 
 /*
 	notes:

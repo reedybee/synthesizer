@@ -20,6 +20,11 @@ Renderer::Renderer(int width, int height, const char* title) {
     glfwMakeContextCurrent(window);
 }
 
+void Renderer::ClearFramebuffer(float r, float g, float b, float a , int flags) {
+    glClearColor(r, g, b, a);
+    glClear(flags);
+}
+
 bool Renderer::ShouldClose() {
     return glfwWindowShouldClose(window);
 }
@@ -46,6 +51,7 @@ void Renderer::ImGuiNewFrame() {
 }
 
 void Renderer::ImGuiRender() {
+    ImGui::End();
     ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

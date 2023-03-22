@@ -20,7 +20,7 @@
 
 // TODO: talk to mr stone about finding a better name for this "synth"
 
-float frequency = CalculateFrequency(3,3);
+float frequency = CalculateFrequency(4,4);
 
 //the entry point of our application
 int main(int argc, char* argv[]) {
@@ -37,8 +37,6 @@ int main(int argc, char* argv[]) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
-	glfwWindowHint(GLFW_DECORATED, true);
-	glfwWindowHint(GLFW_MAXIMIZED, false);
 	
 	Renderer renderer = Renderer(500, 500, "synthesizer");
 
@@ -48,28 +46,28 @@ int main(int argc, char* argv[]) {
 
 	renderer.ImGuiInit();
 
-	const char* waveforms[] = {"Sine", "Sawtooth", "Square", "Triangle", "Noise"};
-	static const char* selectedWaveform = waveforms[0];
+	static const char* selectedWaveform = defaultWaveforms[0];
 	while (!renderer.ShouldClose()) {
-		glClearColor(0.0f,0.0f,0.0f,0.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
+		renderer.ClearFramebuffer();
 		renderer.ImGuiNewFrame();
+
 		ImGui::Begin("synth window");
 
 		if (ImGui::BeginCombo("Default Waveform", selectedWaveform)) {
-			for (int i = 0; i < IM_ARRAYSIZE(waveforms); i++) {
-				bool selected = (selectedWaveform == waveforms[i]);
-				if (ImGui::Selectable(waveforms[i], selected))
-					selectedWaveform = waveforms[i];
+			for (int i = 0; i < IM_ARRAYSIZE(defaultWaveforms); i++) {
+				bool selected = (selectedWaveform == defaultWaveforms[i]);
+				if (ImGui::Selectable(defaultWaveforms[i], selected))
+					selectedWaveform = defaultWaveforms[i];
 				if (selected)
 					ImGui::SetItemDefaultFocus();
 			}
 			ImGui::EndCombo();
 		}
-		std::string generate = "Generate ";
-		generate.append(selectedWaveform);
-		if (ImGui::Button(generate.c_str())) {
+		std::string defaultWaveName = "Generate ";
+		defaultWaveName.append(selectedWaveform);
+		if (ImGui::Button(defaultWaveName.c_str())) {
+			if (selectedWaveform == "None")
+				std::cout << "Could not generate file as no waveform is selected.\n";
 			if (selectedWaveform == "Sine")
 				defaultGenerator.sine("sine", 5, frequency);
 			if (selectedWaveform == "Sawtooth")
@@ -84,11 +82,8 @@ int main(int argc, char* argv[]) {
 		if (ImGui::Button("Generate All Default Wave Files")) {
 			defaultGenerator.all(frequency);
 		}
-		
-		ImGui::End();
 
 		renderer.ImGuiRender();
-
 		renderer.Render();
 	}
 	glfwTerminate();
