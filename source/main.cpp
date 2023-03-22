@@ -54,6 +54,8 @@ int main(int argc, char* argv[]) {
 
 	bool work = true;
 
+	float phase = 0;
+
 	static const char* selectedWaveform = defaultWaveforms[0];
 	while (!renderer.ShouldClose()) {
 		renderer.ClearFramebuffer();
@@ -105,7 +107,14 @@ int main(int argc, char* argv[]) {
 		if (ImGui::Button("Set Value")) {
 			serial.Write(value);
 		}
-		serial.Write(128);
+
+		float sine = SineOscillator(phase, frequency, 44100);
+		uint8 normSine;
+		NormalizeByte(sine, normSine);
+		serial.Write(normSine);
+		ImGui::InputFloat("Normalized 8bit Sine Value", &sine);
+		int norm32 = normSine;
+		ImGui::InputInt("Normalized 32bit Sine Value", &norm32);
 
 		renderer.ImGuiRender();
 		renderer.Render();

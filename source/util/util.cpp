@@ -7,9 +7,9 @@
 
 #include <util/util.h>
 
-void ConvertFloatToAudioSample(float value, uint8 &clampedValue) {
-	value = (value + 1.0f) * 127.5f;
-	CLAMP(value,0.0f,255.0f);
+void NormalizeByte(float value, uint8 &clampedValue) {
+	value = (value - 0) / (0 - 255);
+	
 	clampedValue = (uint8)value;
 }
 
