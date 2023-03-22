@@ -42,7 +42,15 @@
 
 struct Serial {
 public:
-    
+    // Default Constructor
+    Serial(const char* comport, unsigned int baudRate);
+    // Writes a char* to the comport
+    bool Write(const char* data);
+    // Writes an int to the comport
+    bool Write(int data);
+    // Closes the communication with the comport
+    void Close();
 private:
-    
+    HANDLE handler;
+    DWORD errors;
 };

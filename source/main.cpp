@@ -18,6 +18,8 @@
 #include <gen/generator.h>
 #include <ren/renderer.h>
 
+#include <serial/serial.h>
+
 // TODO: talk to mr stone about finding a better name for this "synth"
 
 float frequency = CalculateFrequency(4,4);
@@ -43,6 +45,12 @@ int main(int argc, char* argv[]) {
 	if (!gladLoadGLLoader((GLADloadproc(glfwGetProcAddress)))) {
 		return 0;
 	}
+
+	int value = 0;
+
+	Serial serial = Serial("\\\\.\\COM3", 9600);
+
+	serial.Write(255);
 
 	renderer.ImGuiInit();
 
@@ -82,10 +90,17 @@ int main(int argc, char* argv[]) {
 		if (ImGui::Button("Generate All Default Wave Files")) {
 			defaultGenerator.all(frequency);
 		}
+		if (ImGui::Button("100%")) {
+			serial.Write(255);
+		}
+		if (ImGui::Button("0%")) {
+			serial.Write(0);
+		}
 
 		renderer.ImGuiRender();
 		renderer.Render();
 	}
 	glfwTerminate();
+	//CloseHandle(ioComm);
 	return 0;
 	}
