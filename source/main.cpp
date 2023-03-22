@@ -52,6 +52,8 @@ int main(int argc, char* argv[]) {
 
 	renderer.ImGuiInit();
 
+	bool work = true;
+
 	static const char* selectedWaveform = defaultWaveforms[0];
 	while (!renderer.ShouldClose()) {
 		renderer.ClearFramebuffer();
@@ -99,7 +101,7 @@ int main(int argc, char* argv[]) {
 		}
 		
 		ImGui::SliderInt("Value", &value, 0, 255);
-		
+
 		if (ImGui::Button("Set Value")) {
 			serial.Write(value);
 		}

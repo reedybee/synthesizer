@@ -91,7 +91,6 @@ Serial::Serial(const char* comport, unsigned int baudRate) {
             params.Parity = NOPARITY;
             params.fDtrControl = DTR_CONTROL_ENABLE;
 
-
             if (!SetCommState(handler, &params)) {
                 std::cout << "Could not set serial parameters.\n";
             } else {
@@ -109,6 +108,7 @@ bool Serial::Write(const char* data) {
         ClearCommError(handler, &errors, &status);
         return false;
     } else {
+        std::cout << "";
         return true;
     }
 }
