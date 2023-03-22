@@ -66,24 +66,69 @@
 Serial::Serial(const char* comport, unsigned int baudRate) {
     handler = CreateFileA(comport, GENERIC_READ | GENERIC_WRITE,  0, NULL, OPEN_EXISTING, 0, NULL);
 
-    errors = GetLastError();
+    if (handler == INVALID_HANDLE_VALUE) {
+        errors = GetLastError();
 
-    if (GetLastError() == ERROR_ACCESS_DENIED)
-		std::cout << "Access was denied\n";
+        switch (errors) {
+            case (ERROR_SUCCESS):
+                std::cout << "If you manage to trigger this, good job!\n";
+            case (ERROR_ACCESS_DENIED):
+                std::cout << "Access was denied, another program is most likely using the specified comport.\n"; 
+            case (ERROR_FILE_NOT_FOUND):
+                std::cout << comport << "was not found.\n"; 
+            default:
+                std::cout << errors << " has not been specified\n";
+        }
+    } else {
+        DCB params = { 0 };
+
+        if (!GetCommState(handler, &params)) {
+            std::cout << "Failed to get serial parameters\n";
+        } else {
+            params.BaudRate = baudRate;
+            params.ByteSize = 8;
+            params.StopBits = ONESTOPBIT;
+            params.Parity = NOPARITY;
+            params.fDtrControl = DTR_CONTROL_ENABLE;
+
+
+            if (!SetCommState(handler, &params)) {
+                std::cout << "Could not set serial parameters.\n";
+            } else {
+                connected = true;
+                PurgeComm(handler, PURGE_RXCLEAR | PURGE_TXCLEAR);
+            }
+        }
+    }
 }
 
 bool Serial::Write(const char* data) {
     DWORD bytesSent;
-    WriteFile(handler, data, strlen(data), &bytesSent, NULL);
+    if (!WriteFile(handler, data, strlen(data), &bytesSent, NULL)) {
+        std::cout << "Failed to write data.\n";
+        ClearCommError(handler, &errors, &status);
+        return false;
+    } else {
+        return true;
+    }
 }
 
 bool Serial::Write(int data) {
     DWORD bytesSent;
     std::string stringData = std::to_string(data);
     const char* dataChar = stringData.c_str();
-    WriteFile(handler, dataChar, strlen(dataChar), &bytesSent, NULL);
+    if (!WriteFile(handler, dataChar, strlen(dataChar), &bytesSent, NULL)) {
+        std::cout << "Failed to write data.\n";
+        ClearCommError(handler, &errors, &status);
+        return false;
+    } else {
+        return true;
+    }
 }
 
 void Serial::Close() {
-
+    if (connected) {
+        connected = false;
+        CloseHandle(handler);
+    }
 }

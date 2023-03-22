@@ -53,4 +53,7 @@ public:
 private:
     HANDLE handler;
     DWORD errors;
+    COMSTAT status;
+
+    bool connected;
 };

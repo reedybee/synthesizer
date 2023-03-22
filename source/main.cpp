@@ -48,9 +48,7 @@ int main(int argc, char* argv[]) {
 
 	int value = 0;
 
-	Serial serial = Serial("\\\\.\\COM3", 9600);
-
-	serial.Write(255);
+	Serial serial = Serial("\\\\.\\COM3", CBR_9600);
 
 	renderer.ImGuiInit();
 
@@ -93,14 +91,23 @@ int main(int argc, char* argv[]) {
 		if (ImGui::Button("100%")) {
 			serial.Write(255);
 		}
+		if (ImGui::Button("50%")) {
+			serial.Write(128);
+		}
 		if (ImGui::Button("0%")) {
 			serial.Write(0);
+		}
+		
+		ImGui::SliderInt("Value", &value, 0, 255);
+		
+		if (ImGui::Button("Set Value")) {
+			serial.Write(value);
 		}
 
 		renderer.ImGuiRender();
 		renderer.Render();
 	}
 	glfwTerminate();
-	//CloseHandle(ioComm);
+	serial.Close();
 	return 0;
 	}
