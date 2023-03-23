@@ -91,9 +91,13 @@ int main(int argc, char* argv[]) {
 
 
 		float value = SineOscillator(phase, frequency, 44100);
-		ImGui::SliderFloat("Value", &value, 0, 255);
 		ImGui::InputFloat("Phase", &phase);
-		serial.Write(value);
+
+
+		float normValue = (value + 1) * 127.5f;
+
+		ImGui::SliderFloat("Normalized", &normValue, 0, 255);
+		serial.Write(normValue);
 		renderer.ImGuiRender();
 		renderer.Render();
 		while (glfwGetTime() < lasttime + 1.0 / 60) {
@@ -102,6 +106,7 @@ int main(int argc, char* argv[]) {
 		lasttime += 1.0 / 60;
 	}
 	glfwTerminate();
+	renderer.ImGuiTerminate();
 	serial.Close();
 	return 0;
 	}

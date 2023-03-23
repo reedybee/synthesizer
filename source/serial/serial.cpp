@@ -87,7 +87,6 @@ bool Serial::Write(const char* data) {
         ClearCommError(handler, &errors, &status);
         return false;
     } else {
-        Sleep(5);
         return true;
     }
 }
@@ -101,7 +100,7 @@ bool Serial::Write(int data) {
         ClearCommError(handler, &errors, &status);
         return false;
     } else {
-        //Sleep(5);
+        delete[] dataChar;
         return true;
     }
 }
