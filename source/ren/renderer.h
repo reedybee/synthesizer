@@ -27,8 +27,6 @@ public:
     // Swaps the buffers and polls any events
     void Render();
 
-    ~Renderer();
-
     // how to interface with imgui from within the renderer
     
     // Initializes ImGui
@@ -37,8 +35,6 @@ public:
     void ImGuiNewFrame();
     // Renders the ImGui context
     void ImGuiRender();
-
-    void ImGuiTerminate();
 
 private:
     GLFWwindow* window;

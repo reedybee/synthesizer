@@ -36,10 +36,6 @@ GLFWwindow*  Renderer::GetWindow() {
     return window;
 }
 
-Renderer::~Renderer() {
-    glfwDestroyWindow(window);
-}
-
 void Renderer::ImGuiInit() {
     IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -61,12 +57,6 @@ void Renderer::ImGuiRender() {
     ImGui::End();
     ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void Renderer::ImGuiTerminate() {
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 }
 
 void Renderer::Render() {
