@@ -9,7 +9,7 @@
 
 void ConvertFloatToAudioSample(float value, uint8 &clampedValue) {
 	value = (value + 1.0f) * 127.5f;
-	CLAMP(value,0.0f,255.0f);
+	CLAMP(value, 0.0f, 255.0f);
 	clampedValue = (uint8)value;
 }
 

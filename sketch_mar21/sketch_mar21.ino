@@ -4,14 +4,14 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   pinMode(PIN, OUTPUT);
-  Serial.setTimeout(0);
+  Serial.setTimeout(5);
 }
 
 int data;
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if (Serial.available()) {
+  if (Serial.available() > 0) {
     data = Serial.parseInt();
     Serial.println(data);
     analogWrite(PIN, data);

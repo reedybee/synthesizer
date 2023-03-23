@@ -64,11 +64,11 @@ Serial::Serial(const char* comport, unsigned int baudRate) {
             std::cout << "Failed to get serial timouts.\n";
         } else {
             // TODO: find defaults
-            timeouts.ReadIntervalTimeout = 50;
-            timeouts.ReadTotalTimeoutConstant = 50;
-            timeouts.ReadTotalTimeoutMultiplier = 50;
-            timeouts.WriteTotalTimeoutConstant = 50;
-            timeouts.WriteTotalTimeoutMultiplier = 10;
+            timeouts.ReadIntervalTimeout = 0;
+            timeouts.ReadTotalTimeoutConstant = 0;
+            timeouts.ReadTotalTimeoutMultiplier = 0;
+            timeouts.WriteTotalTimeoutConstant = 0;
+            timeouts.WriteTotalTimeoutMultiplier = 0;
 
             if (!SetCommTimeouts(handler, &timeouts)) {
                 std::cout << "Could not set serial timeouts.\n";
@@ -83,10 +83,11 @@ Serial::Serial(const char* comport, unsigned int baudRate) {
 bool Serial::Write(const char* data) {
     DWORD bytesSent;
     if (!WriteFile(handler, data, strlen(data), &bytesSent, NULL)) {
-        std::cout << "Failed to write data.\n";
+        std::cout << "Failed to write data." << GetLastError() << "\n";
         ClearCommError(handler, &errors, &status);
         return false;
     } else {
+        Sleep(5);
         return true;
     }
 }
@@ -96,10 +97,11 @@ bool Serial::Write(int data) {
     std::string stringData = std::to_string(data);
     const char* dataChar = stringData.c_str();
     if (!WriteFile(handler, dataChar, strlen(dataChar), &bytesSent, NULL)) {
-        std::cout << "Failed to write data.\n";
+        std::cout << "Failed to write data." << GetLastError() << "\n";
         ClearCommError(handler, &errors, &status);
         return false;
     } else {
+        //Sleep(5);
         return true;
     }
 }

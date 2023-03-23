@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 #include <memory.h>
+#include <thread>
+#include <algorithm>
 #include <stdlib.h>
 #include <string>
 
@@ -21,6 +23,8 @@
 #include <serial/serial.h>
 
 // TODO: talk to mr stone about finding a better name for this "synth"
+
+float phase;
 
 float frequency = CalculateFrequency(4,4);
 
@@ -46,14 +50,11 @@ int main(int argc, char* argv[]) {
 		return 0;
 	}
 
-	int value = 0;
-
 	Serial serial = Serial("\\\\.\\COM3", CBR_9600);
 
 	renderer.ImGuiInit();
 
-	bool work = true;
-
+	double lasttime = glfwGetTime();
 	static const char* selectedWaveform = defaultWaveforms[0];
 	while (!renderer.ShouldClose()) {
 		renderer.ClearFramebuffer();
@@ -87,28 +88,18 @@ int main(int argc, char* argv[]) {
 			if (selectedWaveform == "Noise")
 				defaultGenerator.noise("noise", 5, frequency);
 		}
-		if (ImGui::Button("Generate All Default Wave Files")) {
-			defaultGenerator.all(frequency);
-		}
-		if (ImGui::Button("100%")) {
-			serial.Write(255);
-		}
-		if (ImGui::Button("50%")) {
-			serial.Write(128);
-		}
-		if (ImGui::Button("0%")) {
-			serial.Write(0);
-		}
-		
-		ImGui::SliderInt("Value", &value, 0, 255);
 
-		if (ImGui::Button("Set Value")) {
-			serial.Write(value);
-		}
-		serial.Write(128);
 
+		float value = SineOscillator(phase, frequency, 44100);
+		ImGui::SliderFloat("Value", &value, 0, 255);
+		ImGui::InputFloat("Phase", &phase);
+		serial.Write(value);
 		renderer.ImGuiRender();
 		renderer.Render();
+		while (glfwGetTime() < lasttime + 1.0 / 60) {
+
+    	}
+		lasttime += 1.0 / 60;
 	}
 	glfwTerminate();
 	serial.Close();
