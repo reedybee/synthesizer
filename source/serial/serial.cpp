@@ -90,7 +90,7 @@ bool Serial::Write(const char* data) {
         return true;
     }
 }
-
+// memory leak somewhere in here
 bool Serial::Write(int data) {
     DWORD bytesSent;
     std::string stringData = std::to_string(data);
@@ -100,7 +100,6 @@ bool Serial::Write(int data) {
         ClearCommError(handler, &errors, &status);
         return false;
     } else {
-        delete[] dataChar;
         return true;
     }
 }

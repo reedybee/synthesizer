@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
 		float normValue = (value + 1) * 127.5f;
 
 		ImGui::SliderFloat("Normalized", &normValue, 0, 255);
-		serial.Write(normValue);
+		//serial.Write(normValue);
 		renderer.ImGuiRender();
 		renderer.Render();
 		while (glfwGetTime() < lasttime + 1.0 / 60) {

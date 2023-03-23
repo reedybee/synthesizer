@@ -17,6 +17,9 @@
 
 Renderer::Renderer(int width, int height, const char* title) {
     window = glfwCreateWindow(width, height, title, NULL, NULL);
+    if (!window) {
+        std::cout <<  glfwGetError(NULL) << "\n";
+    }
     glfwMakeContextCurrent(window);
 }
 
@@ -25,7 +28,7 @@ void Renderer::ClearFramebuffer(float r, float g, float b, float a , int flags) 
     glClear(flags);
 }
 
-bool Renderer::ShouldClose() {
+int Renderer::ShouldClose() {
     return glfwWindowShouldClose(window);
 }
 
