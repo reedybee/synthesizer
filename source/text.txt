@@ -41,3 +41,5 @@ float *data = new float[numSamples];
 
 //the phase of our oscilator
 float phase = 0;
+
+https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-
