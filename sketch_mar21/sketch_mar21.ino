@@ -4,7 +4,7 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   pinMode(PIN, OUTPUT);
-  Serial.setTimeout(5);
+  Serial.setTimeout(10);
 }
 
 int data;

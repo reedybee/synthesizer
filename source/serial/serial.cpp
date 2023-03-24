@@ -96,12 +96,12 @@ bool Serial::Write(int data) {
     DWORD bytesSent;
     std::string stringData = std::to_string(data);
     const char* dataChar = stringData.c_str();
+    Sleep(15);
     if (!WriteFile(handler, dataChar, strlen(dataChar), &bytesSent, NULL)) {
         std::cout << "Failed to write data." << GetLastError() << "\n";
         ClearCommError(handler, &errors, &status);
         return false;
     } else {
-        delete[] dataChar;
         return true;
     }
 }
