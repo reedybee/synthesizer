@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 		return 0;
 	}
 
-	Serial serial = Serial("\\\\.\\COM3", CBR_9600);
+	Serial serial = Serial("\\\\.\\COM3", CBR_9600); 
 
 	renderer.ImGuiInit();
 
@@ -70,7 +70,6 @@ int main(int argc, char* argv[]) {
 				if (selected)
 					ImGui::SetItemDefaultFocus();
 			}
-			ImGui::EndCombo();
 		}
 		std::string defaultWaveName = "Generate ";
 		defaultWaveName.append(selectedWaveform);
@@ -104,10 +103,10 @@ int main(int argc, char* argv[]) {
 		serial.Write(normValue);
 		renderer.ImGuiRender();
 		renderer.Render();
-		while (glfwGetTime() < lasttime + 1.0 / 25) {
+		while (glfwGetTime() < lasttime + 1.0 / 30) {
 
     	}
-		lasttime += 1.0 / 25;
+		lasttime += 1.0 / 30;
 	}
 	glfwTerminate();
 	serial.Close();

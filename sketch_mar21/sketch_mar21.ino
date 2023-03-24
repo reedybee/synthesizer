@@ -11,7 +11,7 @@ int data;
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if (Serial.available() > 0) {
+  if (Serial.available()) {
     data = Serial.parseInt();
     Serial.println(data);
     analogWrite(PIN, data);
