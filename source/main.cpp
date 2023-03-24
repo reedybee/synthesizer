@@ -96,7 +96,6 @@ int main(int argc, char* argv[]) {
 		ImGui::InputFloat("Voltage", &voltage, 0, 255);
 		ImGui::InputFloat("Phase", &phase);
 
-
 		float normValue = (value + 1) * 127.5f;
 
 		ImGui::SliderFloat("Normalized", &normValue, 0, 255);
