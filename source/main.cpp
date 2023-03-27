@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <imgui/imgui.h>
@@ -22,9 +23,7 @@
 
 #include <serial/serial.h>
 
-// TODO: talk to mr stone about finding a better name for this "synth"
-
-float phase;
+float phase = 0;
 
 float frequency = CalculateFrequency(4,4);
 
@@ -50,9 +49,13 @@ int main(int argc, char* argv[]) {
 		return 0;
 	}
 
-	Serial serial = Serial("\\\\.\\COM3", CBR_9600); 
+	Serial serial = Serial("\\\\.\\COM3", CBR_19200); 
 
 	renderer.ImGuiInit();
+
+	float value = 0;
+	float voltage = 0;
+	float normValue = 0;
 
 	double lasttime = glfwGetTime();
 	static const char* selectedWaveform = defaultWaveforms[0];
@@ -89,23 +92,33 @@ int main(int argc, char* argv[]) {
 		}
 
 
-		float value = SineOscillator(phase, frequency, 44100);
+		static std::chrono::time_point<std::chrono::steady_clock> lastSendTime;
+		if (std::chrono::steady_clock::now() - lastSendTime >= std::chrono::milliseconds(70)) {
+			
+			value = SineOscillator(phase, frequency, 44100 / 2);
 
-		float voltage = (value + 1) * 1.5;
-		ImGui::SliderFloat("Value", &value, 0, 255);
-		ImGui::InputFloat("Voltage", &voltage, 0, 255);
-		ImGui::InputFloat("Phase", &phase);
+			voltage = (value + 1) * 1.5;
 
-		float normValue = (value + 1) * 127.5f;
+			normValue = (value + 1) * 127.5f;
 
+			serial.Write(normValue);
+
+			lastSendTime = std::chrono::steady_clock::now();
+		}
+
+		ImGui::SliderFloat("Value", &value, -1, 1);
+		ImGui::SliderFloat("Voltage", &voltage, 0, 3);
+		ImGui::SliderFloat("Phase", &phase, 0, 6);
 		ImGui::SliderFloat("Normalized", &normValue, 0, 255);
-		serial.Write(normValue);
+
 		renderer.ImGuiRender();
 		renderer.Render();
-		while (glfwGetTime() < lasttime + 1.0 / 30) {
 
-    	}
-		lasttime += 1.0 / 30;
+		while (glfwGetTime() < lasttime + 1.0 / 30) {
+			glfwWaitEventsTimeout(lasttime + 1.0 / 30 - glfwGetTime());
+		}
+
+    	lasttime = glfwGetTime();
 	}
 	glfwTerminate();
 	serial.Close();

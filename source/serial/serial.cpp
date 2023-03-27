@@ -81,28 +81,27 @@ Serial::Serial(const char* comport, unsigned int baudRate) {
 }
 
 bool Serial::Write(const char* data) {
-    DWORD bytesSent;
+    DWORD bytesSent = 0;
     if (!WriteFile(handler, data, strlen(data), &bytesSent, NULL)) {
-        std::cout << "Failed to write data." << GetLastError() << "\n";
-        ClearCommError(handler, &errors, &status);
+        errors = GetLastError();
+        std::cout << "Failed to write data. Error Code: " << errors << "\n";
         return false;
-    } else {
-        Sleep(5);
-        return true;
     }
+
+    return true;
 }
 // memory leak somewhere in here
 bool Serial::Write(int data) {
-    DWORD bytesSent;
+    DWORD bytesSent = 0;
     std::string stringData = std::to_string(data);
     const char* dataChar = stringData.c_str();
     if (!WriteFile(handler, dataChar, strlen(dataChar), &bytesSent, NULL)) {
-        std::cout << "Failed to write data." << GetLastError() << "\n";
-        ClearCommError(handler, &errors, &status);
+        errors = GetLastError();
+        std::cout << "Failed to write data. Error Code: " << errors << ", bytes sent: " << bytesSent << "\n";
         return false;
-    } else {
-        return true;
     }
+
+    return true;
 }
 
 void Serial::Close() {
