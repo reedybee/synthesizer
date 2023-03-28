@@ -7,7 +7,8 @@ void setup() {
   Serial.setTimeout(10);
 }
 
-int data;
+int data = 0;
+Chrono chrono;
 
 void loop() {
   // put your main code here, to run repeatedly:
@@ -16,4 +17,5 @@ void loop() {
     Serial.println(data);
     analogWrite(PIN, data);
   }
+  Serial.flush();
 }

@@ -104,6 +104,14 @@ bool Serial::Write(int data) {
     return true;
 }
 
+void Serial::ClearBuffer() {
+    if (!PurgeComm(handler, PURGE_RXCLEAR | PURGE_TXCLEAR)) {
+        errors = GetLastError();
+        std::cout << "Failed to purge serial port. Error Code: " << errors << "\n";
+    }
+}
+
+
 void Serial::Close() {
     if (connected) {
         connected = false;

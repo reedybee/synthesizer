@@ -48,6 +48,8 @@ public:
     bool Write(const char* data);
     // Writes an int to the comport
     bool Write(int data);
+
+    void ClearBuffer();
     // Closes the communication with the comport
     void Close();
 private:
